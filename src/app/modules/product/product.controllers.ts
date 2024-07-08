@@ -16,14 +16,24 @@ const createProduct = catchAsync(async (req, res) => {
 });
 
 const getAllProducts = catchAsync(async (req, res) => {
-  const result = await ProductService.getAllProductsFromDB();
+  const query = req.query;
+  const result = await ProductService.getAllProductsFromDB(query);
 
-  sendResponse(res, {
-    statusCode: 200,
-    success: true,
-    message: "Products retrieves successfully",
-    data: result,
-  });
+  if (!result.length) {
+    sendResponse(res, {
+      statusCode: 404,
+      success: false,
+      message: "no data found",
+      data: null,
+    });
+  } else {
+    sendResponse(res, {
+      statusCode: 200,
+      success: true,
+      message: "Products retrieves successfully",
+      data: result,
+    });
+  }
 });
 
 const updateProduct = catchAsync(async (req, res) => {
