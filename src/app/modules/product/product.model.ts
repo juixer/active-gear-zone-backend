@@ -38,6 +38,10 @@ const productSchema = new Schema<IProduct>({
     type: String,
     required: true,
   },
+  isAvailable: {
+    type: Boolean,
+    default: true,
+  },
 });
 
 export const Product = model<IProduct>("Product", productSchema);

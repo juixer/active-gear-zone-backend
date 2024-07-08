@@ -21,4 +21,4 @@ route.patch(
 
 route.delete("/:productId", ProductController.deleteProduct);
 
-export const ProductRoute = route;
+export const ProductRoutes = route;
