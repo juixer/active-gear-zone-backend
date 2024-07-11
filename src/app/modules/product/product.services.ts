@@ -9,21 +9,44 @@ const createProductIntoDB = async (payload: IProduct) => {
 };
 
 const getAllProductsFromDB = async (query: Record<string, unknown>) => {
-  const productQuery = new QueryBuilder(Product.find(), query)
+  const { minPrice, maxPrice, category, brand, rating } = query;
+
+  const pQuery: Record<string, unknown> = {};
+
+  if (minPrice !== undefined && maxPrice !== undefined) {
+    pQuery.price = { $gte: Number(minPrice), $lte: Number(maxPrice) };
+  }
+
+  if (category) {
+    pQuery.category = category;
+  }
+
+  if (brand) {
+    pQuery.brand = brand;
+  }
+
+  if (rating !== undefined) {
+    pQuery.rating = { $gte: Number(rating) };
+  }
+
+  const productQuery = new QueryBuilder(Product.find(pQuery), query)
     .search(["name"])
-    .filter()
     .sort()
-    .paginate()
-    .fields();
+    .paginate();
 
   const result = await productQuery.modelQuery;
   return result;
 };
 
-const getSingleProductFromDB = async (productId : string) => {
-  const result = await Product.findById(productId)
-  return result
-}
+const getSingleProductFromDB = async (productId: string) => {
+  const result = await Product.findById(productId);
+  return result;
+};
+
+const getLatestProductFromDB = async () => {
+  const result = await Product.find().sort({ createdAt: -1 }).limit(8);
+  return result;
+};
 
 const updateProductIntoDB = async (
   productId: string,
@@ -56,6 +79,7 @@ export const ProductService = {
   createProductIntoDB,
   getAllProductsFromDB,
   updateProductIntoDB,
+  getLatestProductFromDB,
   deleteProductFromDB,
-  getSingleProductFromDB
+  getSingleProductFromDB,
 };

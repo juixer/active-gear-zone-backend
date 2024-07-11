@@ -1,4 +1,5 @@
 export interface IProduct {
+  _id: import("mongoose").Types.ObjectId;
   name: string;
   description: string;
   category: string;
