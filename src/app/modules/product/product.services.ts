@@ -38,7 +38,7 @@ const getFilterProductsFromDB = async (query: Record<string, unknown>) => {
     pQuery.rating = { $gte: Number(rating) };
   }
 
-  const productQuery = new QueryBuilder(Product.find(pQuery).skip(pageNumber * limitNumber).limit(9), query)
+  const productQuery = new QueryBuilder(Product.find(pQuery).skip(pageNumber * limitNumber).limit(limitNumber), query)
     .search(["name"])
     .sort();
 
