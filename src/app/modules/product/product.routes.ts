@@ -12,6 +12,7 @@ route.post(
 );
 
 route.get("/", ProductController.getAllProducts);
+route.get("/filter", ProductController.getFilterProducts);
 route.get("/latest", ProductController.getLatestProduct);
 
 route.get("/:productId", ProductController.getSingleProduct);

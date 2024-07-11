@@ -15,11 +15,11 @@ const createProduct = catchAsync(async (req, res) => {
   });
 });
 
-const getAllProducts = catchAsync(async (req, res) => {
+const getFilterProducts = catchAsync(async (req, res) => {
   const query = req.query;
-  const result = await ProductService.getAllProductsFromDB(query);
+  const result = await ProductService.getFilterProductsFromDB(query);
 
-  if (!result.length) {
+  if (!result.result.length) {
     sendResponse(res, {
       statusCode: 404,
       success: false,
@@ -47,7 +47,7 @@ const getSingleProduct = catchAsync(async (req, res) => {
   });
 });
 
-const getLatestProduct =catchAsync(async (req, res) => {
+const getLatestProduct = catchAsync(async (req, res) => {
   const result = await ProductService.getLatestProductFromDB();
   sendResponse(res, {
     statusCode: 200,
@@ -55,8 +55,7 @@ const getLatestProduct =catchAsync(async (req, res) => {
     message: "Products retrieves successfully",
     data: result,
   });
-})
-
+});
 
 const updateProduct = catchAsync(async (req, res) => {
   const { productId } = req.params;
@@ -83,11 +82,22 @@ const deleteProduct = catchAsync(async (req, res) => {
   });
 });
 
+const getAllProducts = catchAsync(async (req, res) => {
+  const result = await ProductService.getAllProductsFromDB();
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: "Products retrieves successfully",
+    data: result,
+  });
+});
+
 export const ProductController = {
   createProduct,
-  getAllProducts,
+  getFilterProducts,
   updateProduct,
   getLatestProduct,
   deleteProduct,
-  getSingleProduct
+  getSingleProduct,
+  getAllProducts
 };
