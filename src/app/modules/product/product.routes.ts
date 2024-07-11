@@ -13,6 +13,8 @@ route.post(
 
 route.get("/", ProductController.getAllProducts);
 
+route.get("/:productId", ProductController.getSingleProduct);
+
 route.patch(
   "/:productId",
   validateRequest(ProductValidation.updateProductSchemaValidation),

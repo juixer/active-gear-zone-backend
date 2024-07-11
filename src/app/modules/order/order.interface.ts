@@ -1,11 +1,15 @@
 import { Types } from "mongoose";
 
-export interface IOrder {
-  id: Types.ObjectId;
+export type TCart = {
+  _id: Types.ObjectId;
   quantity: number;
-  price: number;
+};
+export interface IOrder {
+  subTotal: number;
   name: string;
   email: string;
   phone: string;
   address: string;
+  paymentMethod: "Cash on delivery" | "Credit Card";
+  cart: TCart[];
 }

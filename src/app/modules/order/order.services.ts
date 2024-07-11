@@ -4,22 +4,27 @@ import { IOrder } from "./order.interface";
 import { Order } from "./order.model";
 
 const createOrderIntoDB = async (payload: IOrder) => {
-  const { id, quantity: orderQuantity } = payload;
 
-  const product = (await Product.findById(id)) as IProduct;
+  const {cart} = payload;
 
-  const { stockQuantity } = product;
-  const quantity = stockQuantity - orderQuantity;
-  const isAvailable = quantity > 0;
+  const productIds =  cart.map(item => item._id)
 
-  await Product.findByIdAndUpdate(
-    id,
-    {
-      stockQuantity: quantity,
-      isAvailable: isAvailable,
-    },
-    { new: true }
-  );
+  const products = await Product.find({_id : {$in: productIds}}) as IProduct[];
+  for (const item of cart) {
+    const product = products.find(p => p._id == item._id);
+
+    const newStockQuantity = (product?.stockQuantity as number) - item.quantity;
+    const newIsAvailable = newStockQuantity > 0;
+
+    await Product.findByIdAndUpdate(
+      item._id,
+      {
+        stockQuantity: Number(newStockQuantity),
+        isAvailable: newIsAvailable,
+      },
+      { new: true }
+    );
+  }
 
   const result = await Order.create(payload);
   return result;

@@ -20,6 +20,11 @@ const getAllProductsFromDB = async (query: Record<string, unknown>) => {
   return result;
 };
 
+const getSingleProductFromDB = async (productId : string) => {
+  const result = await Product.findById(productId)
+  return result
+}
+
 const updateProductIntoDB = async (
   productId: string,
   payload: Partial<IProduct>
@@ -52,4 +57,5 @@ export const ProductService = {
   getAllProductsFromDB,
   updateProductIntoDB,
   deleteProductFromDB,
+  getSingleProductFromDB
 };

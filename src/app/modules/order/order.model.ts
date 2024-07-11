@@ -1,17 +1,23 @@
 import { model, Schema } from "mongoose";
-import { IOrder } from "./order.interface";
+import { IOrder, TCart } from "./order.interface";
 
-const orderSchema = new Schema<IOrder>({
-  id: {
+const cartSchema = new Schema<TCart>({
+  _id: {
     type: Schema.Types.ObjectId,
+    ref: "Product",
     required: true,
   },
   quantity: {
     type: Number,
     required: true,
     min: 1,
+    max: 100,
+    default: 1,
   },
-  price: {
+});
+
+const orderSchema = new Schema<IOrder>({
+  subTotal: {
     type: Number,
     required: true,
     min: 0.01,
@@ -33,6 +39,16 @@ const orderSchema = new Schema<IOrder>({
     type: String,
     required: true,
   },
+  cart: {
+    type: [cartSchema],
+    required: true,
+  },
+  paymentMethod:{
+    type: String,
+    required: true,
+    enum: ["Cash on delivery", "Credit Card"],
+    default: "Cash on delivery",
+  }
 });
 
 export const Order = model<IOrder>("Order", orderSchema);
